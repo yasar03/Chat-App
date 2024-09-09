@@ -64,7 +64,7 @@ padding: 0;
         height: fit-content;
         width: fit-content;
         padding: 20px;
-        color: white;
+        color: rgb(0, 0, 0);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
         background: rgb(4, 4, 17);
@@ -165,142 +165,12 @@ padding: 0;
     <div class="footer">
       <center>
         <input type="text" placeholder="Enter message" class="message-input" />
+        <button class="send-button">Send</button>
       </center>
     </div>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase.js"></script>
-    <script>
-//       var firebaseConfig = {
-//   apiKey: "AIzaSyDLtWbefGSAd8ACZxnHJxF7wLgrkXEvkEs",
-//   authDomain: "chat-app-d9289.firebaseapp.com",
-//   databaseURL: "https://chat-app-d9289-default-rtdb.firebaseio.com",
-//   projectId: "chat-app-d9289",
-//   storageBucket: "chat-app-d9289.appspot.com",
-//   messagingSenderId: "910151259608",
-//   appId: "1:910151259608:web:b752216bbef028090f8ead",
-//   measurementId: "G-EKHNKSYT0J"
-// };
-//       firebase.initializeApp(firebaseConfig);
-//       setInterval(() => {
-//         document.querySelector(".message-body").style.height =
-//           window.innerHeight - 110 + "px";
-//       }, 100);
-//       var me = "";
-//       window.onload = function () {
-//         ThunkableWebviewerExtension.receiveMessage(async function(event) {
-//         // swal({
-//         //   text: "Enter your email?",
-//         //   content: "input",
-//         //   button: {
-//         //     text: "Go!",
-//         //     closeModal: true,
-//         //   },
-//         //   allowOutsideClick: false,
-//         //   closeOnClickOutside: false,
-//         // }).then((value) => {
-//         //   if (value.trim() == "") {
-//         //     window.location.reload();
-//         //     return;
-//         //   }
-
-//         const data = JSON.parse(event);
-//         senderEmail = data.senderEmail;
-//         receiverEmail = data.receiverEmail;
-//           me = senderEmail;
-//           document
-//             .querySelector(".message-input")
-//             .addEventListener("keypress", (e) => {
-//               if (e.key === "Enter") {
-//                 firebase
-//                   .database()
-//                   .ref(`chats/${senderEmail}_${receiverEmail}/Texts`)
-//                   .push({
-//                     user: me,
-//                     msg: document
-//                       .querySelector(".message-input")
-//                       .value.trim()
-//                       .replace(/</g, "&lt;"),
-//                   });
-//                 document.querySelector(".message-input").value = "";
-//               }
-//             });
-//           var id = "";
-//           firebase
-//             .database()
-//             .ref(`chats/${senderEmail}_${receiverEmail}/Texts`)
-//             .on("child_added", (s) => {
-//               document.querySelector(".loader").style.opacity = "0";
-//               if (s.val().user === me) {
-//                 if (id !== s.val().user)
-//                   document.querySelector(".message-body").innerHTML +=
-//                     '<div class="my-name">You</div><div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
-//                     s.key +
-//                     "')\" id=" +
-//                     s.key +
-//                     " >" +
-//                     s.val().msg +
-//                     "</div></div>";
-//                 else
-//                   document.querySelector(".message-body").innerHTML +=
-//                     '<div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
-//                     s.key +
-//                     "')\" id=" +
-//                     s.key +
-//                     ">" +
-//                     s.val().msg +
-//                     "</div></div>";
-//               } else {
-//                 if (id !== s.val().user)
-//                   document.querySelector(".message-body").innerHTML +=
-//                     '<div class="their-name">' +
-//                     s.val().user +
-//                     '</div><div class="message-holder"><div class="their-text" id=' +
-//                     s.key +
-//                     ">" +
-//                     s.val().msg +
-//                     "</div></div>";
-//                 else
-//                   document.querySelector(".message-body").innerHTML +=
-//                     '<div class="message-holder"><div class="their-text" id=' +
-//                     s.key +
-//                     ">" +
-//                     s.val().msg +
-//                     "</div></div>";
-//               }
-//               document.querySelector(".message-body").scrollBy(0, 1000);
-//               id = s.val().user;
-//               firebase
-//                 .database()
-//                 .ref(`chats/${senderEmail}_${receiverEmail}/Texts/` + s.key)
-//                 .on("child_changed", (a) => {
-//                   document.querySelector("#" + s.key).innerHTML =
-//                     "<i>Message Erased</i>";
-//                 });
-//             });
-//         // });
-//       });
-//         // document.querySelector(".swal-content__input").placeholder =
-//         //   "e.g. John Doe";
-     
-//       };
-//       function deleteMsg(key) {
-//         console.log(key);
-//         swal({
-//           title: "Are you sure?",
-//           text: "You cannot recover your text once deleted!",
-//           icon: "warning",
-//           buttons: true,
-//           dangerMode: true,
-//         }).then((e) => {
-//           console.log(e);
-//           if (e)
-//             firebase
-//               .database()
-//               .ref("chats/example1@gmail_example2@gmail/Texts/" + key)
-//               .set({ user: me, msg: "<i>Message Erased</i>" });
-//         });
-//       }
-    </script>
+   
     <script>
       var firebaseConfig = {
         apiKey: "AIzaSyDLtWbefGSAd8ACZxnHJxF7wLgrkXEvkEs",
@@ -336,7 +206,7 @@ padding: 0;
             // Set up an event listener for the message input
             document
               .querySelector(".message-input")
-              .addEventListener("keypress", (e) => {
+              .addEventListener("keydown", (e) => {
                 if (e.key === "Enter") {
                   firebase
                     .database()
@@ -351,6 +221,24 @@ padding: 0;
                   document.querySelector(".message-input").value = "";
                 }
               });
+
+              document.querySelector(".send-button").addEventListener("click", () => {
+              const inputElement = document.querySelector(".message-input");
+              const message = inputElement.value.trim();
+
+              if (message) {
+                firebase
+                  .database()
+                  .ref(`chats/${senderEmail}_${receiverEmail}/Texts`)
+                  .push({
+                    user: me,
+                    msg: message.replace(/</g, "&lt;"),
+                  });
+                inputElement.value = "";
+                document.querySelector(".message-input").value = "";
+              }
+            });
+
     
             // Handle new messages in the chat
             var id = "";
