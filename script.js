@@ -215,3 +215,107 @@ function displayMessage(sender, text) {
 
 // Attach the login function to the button's click event
 document.getElementById('loginButton').addEventListener('click', login);
+
+
+
+window.onload = function () {
+  // Thunkable Web Viewer Extension function to receive messages from Thunkable app
+  window.ThunkableWebviewerExtension = function (value) {
+    if (value.trim() == "") {
+      window.location.reload();
+      return;
+    }
+    me = value;
+
+    document
+      .querySelector(".message-input")
+      .addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          firebase
+            .database()
+            .ref("chats/example1@gmail_example2@gmail/Texts")
+            .push({
+              user: me,
+              msg: document
+                .querySelector(".message-input")
+                .value.trim()
+                .replace(/</g, "&lt;"),
+            });
+          document.querySelector(".message-input").value = "";
+        }
+      });
+
+    var id = "";
+    firebase
+      .database()
+      .ref("chats/example1@gmail_example2@gmail/Texts")
+      .on("child_added", (s) => {
+        document.querySelector(".loader").style.opacity = "0";
+        if (s.val().user === me) {
+          if (id !== s.val().user)
+            document.querySelector(".message-body").innerHTML +=
+              '<div class="my-name">You</div><div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
+              s.key +
+              "')\" id=" +
+              s.key +
+              " >" +
+              s.val().msg +
+              "</div></div>";
+          else
+            document.querySelector(".message-body").innerHTML +=
+              '<div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
+              s.key +
+              "')\" id=" +
+              s.key +
+              ">" +
+              s.val().msg +
+              "</div></div>";
+        } else {
+          if (id !== s.val().user)
+            document.querySelector(".message-body").innerHTML +=
+              '<div class="their-name">' +
+              s.val().user +
+              '</div><div class="message-holder"><div class="their-text" id=' +
+              s.key +
+              ">" +
+              s.val().msg +
+              "</div></div>";
+          else
+            document.querySelector(".message-body").innerHTML +=
+              '<div class="message-holder"><div class="their-text" id=' +
+              s.key +
+              ">" +
+              s.val().msg +
+              "</div></div>";
+        }
+        document.querySelector(".message-body").scrollBy(0, 1000);
+        id = s.val().user;
+
+        firebase
+          .database()
+          .ref("chats/example1@gmail_example2@gmail/Texts/" + s.key)
+          .on("child_changed", (a) => {
+            document.querySelector("#" + s.key).innerHTML =
+              "<i>Message Erased</i>";
+          });
+      });
+  };
+
+  // Default prompt for email input if not received from Thunkable
+  swal({
+    text: "Enter your email?",
+    content: "input",
+    button: {
+      text: "Go!",
+      closeModal: true,
+    },
+    allowOutsideClick: false,
+    closeOnClickOutside: false,
+  }).then((value) => {
+    if (value) {
+      window.ThunkableWebviewerExtension(value);
+    }
+  });
+
+  document.querySelector(".swal-content__input").placeholder = "e.g. John Doe";
+};
