@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beasty</title>
+  <style>
+    /* Styles remain the same */
+  </style>
+</head>
+<body>
+  <div class="header">Beasty</div>
+  <!-- <div class="message-body">
+    <img
+      src="https://flevix.com/wp-content/uploads/2019/07/Ring-Preloader.gif"
+      class="loader"
+    />
+  </div> -->
+  <div class="footer">
+    <center>
+      <input type="text" placeholder="Enter message" class="message-input" />
+      <button class="send-button">Send</button>
+    </center>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase.js"></script>
+
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyDLtWbefGSAd8ACZxnHJxF7wLgrkXEvkEs",
+      authDomain: "chat-app-d9289.firebaseapp.com",
+      databaseURL: "https://chat-app-d9289-default-rtdb.firebaseio.com",
+      projectId: "chat-app-d9289",
+      storageBucket: "chat-app-d9289.appspot.com",
+      messagingSenderId: "910151259608",
+      appId: "1:910151259608:web:b752216bbef028090f8ead",
+      measurementId: "G-EKHNKSYT0J",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    var me = "";
+
+    window.onload = function () {
+        window.addEventListener("message", async function (event) {
+  // Log the received data and its type
+  console.log("Received data from Thunkable:", event.data);
+  console.log("Type of data received:", typeof event.data);
+
+  try {
+    let data;
+
+    // Check if the data is a string or an object
+    if (typeof event.data === "string") {
+      data = JSON.parse(event.data); // Parse the data only if it's a string
+    } else if (typeof event.data === "object") {
+      data = event.data; // If it's already an object, use it as is
+    }
+
+    const senderEmail = data.senderEmail;
+    const receiverEmail = data.receiverEmail;
+
+    me = senderEmail;
+
+    // Handle Enter key and send button for message submission
+    const messageInput = document.querySelector(".message-input");
+    const sendButton = document.querySelector(".send-button");
+
+    const sendMessage = () => {
+      const message = messageInput.value.trim();
+      if (message) {
+        firebase
+          .database()
+          .ref(`chats/${senderEmail}_${receiverEmail}/Texts`)
+          .push({
+            user: me,
+            msg: message.replace(/</g, "&lt;"),
+          });
+        messageInput.value = "";
+      }
+    };
+
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    sendButton.addEventListener("click", () => {
+      sendMessage();
+    });
+
+    // Fetch messages from Firebase
+    firebase
+      .database()
+      .ref(`chats/${senderEmail}_${receiverEmail}/Texts`)
+      .on("child_added", (snapshot) => {
+        document.querySelector(".loader").style.opacity = "0";
+        const messageData = snapshot.val();
+
+        if (messageData.user === me) {
+          document.querySelector(".message-body").innerHTML += `
+            <div class="my-text">${messageData.msg}</div>`;
+        } else {
+          document.querySelector(".message-body").innerHTML += `
+            <div class="their-text">${messageData.msg}</div>`;
+        }
+
+        // Scroll to the bottom
+        document.querySelector(".message-body").scrollBy(0, 1000);
+      });
+  } catch (error) {
+    console.error("Error parsing the data from Thunkable:", error);
+  }
+});
+
+    };
+  </script>
+</body>
+</html>
