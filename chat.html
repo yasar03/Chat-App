@@ -13,7 +13,7 @@ padding: 0;
       }
       
       .message-body {
-        height: 400px;
+        height: 500px;
         width: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
@@ -222,6 +222,7 @@ padding: 0;
 
     var me = "";
     var receiverEmail = "";
+    var isUser = "";
 
     window.onload = function () {
       window.addEventListener("message", async function (event) {
@@ -235,6 +236,7 @@ padding: 0;
 
             me = parsedData.senderEmail;
             receiverEmail = parsedData.receiverEmail;
+            isUser = parsedData.isUser;
 
             if (me && receiverEmail) {
               const messageInput = document.querySelector(".message-input");
@@ -243,12 +245,21 @@ padding: 0;
               // Send message function
               const sendMessage = () => {
                 const message = messageInput.value.trim();
-                if (message) {
+                if (message && isUser=="True") {
                   firebase
                     .database()
                     .ref(`chats/${me}_${receiverEmail}/Texts`)
                     .push({
                       user: me,
+                      msg: message.replace(/</g, "&lt;"), // Escape HTML tags
+                    });
+                  messageInput.value = "";
+                } else if(isUser=="False") {
+                  firebase
+                    .database()
+                    .ref(`chats/${me}_${receiverEmail}/Texts`)
+                    .push({
+                      user: receiverEmail,
                       msg: message.replace(/</g, "&lt;"), // Escape HTML tags
                     });
                   messageInput.value = "";
