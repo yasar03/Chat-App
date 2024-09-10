@@ -13,7 +13,7 @@ padding: 0;
       }
       
       .message-body {
-        height: 200px;
+        height: 400px;
         width: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
@@ -29,7 +29,56 @@ padding: 0;
         left: 0;
       }
       
-     
+      .message-input {
+        height: 0;
+        width: 80%;
+        padding: 20px;
+        font-size: 17px;
+        outline: none;
+        border: 0;
+        color: rgb(0, 0, 0);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        background: transparent;
+        border-bottom: 3px solid rgb(54, 54, 116);
+        transition: 0.3s;
+      }
+
+      .message-input:focus {
+        border-bottom: 3px solid rgb(111, 111, 236);
+      }
+
+      .my-text {
+        height: fit-content;
+        width: fit-content;
+        padding: 20px;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        background: linear-gradient(45deg, rgb(0, 63, 145), rgb(2, 107, 0));
+        margin-left: auto;
+        right: 0;
+        max-width: 200px;
+        border-radius: 7px;
+        margin-right: 20px;
+        margin-top: 10px;
+      }
+
+      .their-text {
+        height: fit-content;
+        width: fit-content;
+        padding: 20px;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        background: linear-gradient(45deg, rgb(0, 63, 145), rgb(98, 0, 107));
+        margin-right: auto;
+        left: 0;
+        max-width: 200px;
+        border-radius: 7px;
+        margin-left: 20px;
+        margin-top: 10px;
+      }
       
   </style>
 </head>
@@ -62,6 +111,115 @@ padding: 0;
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
+    // var me = "";
+    // var receiverEmail = "";
+
+    // window.onload = function () {
+    //   window.addEventListener("message", async function (event) {
+    //     try {
+    //       console.log("Received data from Thunkable:", event.data);
+    //       const data = event.data;
+
+    //       // Parse data if it is a JSON string
+    //       if (typeof data === 'string') {
+    //         const parsedData = JSON.parse(data);
+
+    //         me = parsedData.senderEmail;
+    //         receiverEmail = parsedData.receiverEmail;
+
+    //         if (me && receiverEmail) {
+    //           const messageInput = document.querySelector(".message-input");
+    //           const sendButton = document.querySelector(".send-button");
+
+    //           const sendMessage = () => {
+    //             const message = messageInput.value.trim();
+    //             if (message) {
+    //               firebase
+    //                 .database()
+    //                 .ref(`chats/${me}_${receiverEmail}/Texts`)
+    //                 .push({
+    //                   user: me,
+    //                   msg: message.replace(/</g, "&lt;"),
+    //                 });
+    //               messageInput.value = "";
+    //             }
+    //           };
+
+    //           messageInput.addEventListener("keydown", (e) => {
+    //             if (e.key === "Enter") {
+    //               sendMessage();
+    //             }
+    //           });
+
+    //           sendButton.addEventListener("click", () => {
+    //             sendMessage();
+    //           });
+    //         var id = "";
+    //       firebase
+    //         .database()
+    //         .ref(`chats/${me}_${receiverEmail}/Texts`)
+    //         .on("child_added", (s) => {
+    //           document.querySelector(".loader").style.opacity = "0";
+    //         // document.querySelector(".loader").style.display = "none";
+    //           if (s.val().user === me) {
+    //             if (id !== s.val().user)
+    //               document.querySelector(".message-body").innerHTML +=
+    //                 '<div class="my-name">You</div><div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
+    //                 s.key +
+    //                 "')\" id=" +
+    //                 s.key +
+    //                 " >" +
+    //                 s.val().msg +
+    //                 "</div></div>";
+    //             else
+    //               document.querySelector(".message-body").innerHTML +=
+    //                 '<div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
+    //                 s.key +
+    //                 "')\" id=" +
+    //                 s.key +
+    //                 ">" +
+    //                 s.val().msg +
+    //                 "</div></div>";
+    //           } else {
+    //             if (id !== s.val().user)
+    //               document.querySelector(".message-body").innerHTML +=
+    //                 '<div class="their-name">' +
+    //                 s.val().user +
+    //                 '</div><div class="message-holder"><div class="their-text" id=' +
+    //                 s.key +
+    //                 ">" +
+    //                 s.val().msg +
+    //                 "</div></div>";
+    //             else
+    //               document.querySelector(".message-body").innerHTML +=
+    //                 '<div class="message-holder"><div class="their-text" id=' +
+    //                 s.key +
+    //                 ">" +
+    //                 s.val().msg +
+    //                 "</div></div>";
+    //           }
+    //           document.querySelector(".message-body").scrollBy(0, 1000);
+    //           id = s.val().user;
+    //           firebase
+    //             .database()
+    //             .ref(`chats/${senderEmail}_${receiverEmail}/Texts/` + s.key)
+    //             .on("child_changed", (a) => {
+    //               document.querySelector("#" + s.key).innerHTML =
+    //                 "<i>Message Erased</i>";
+    //             });
+    //         });
+    //         } else {
+    //           console.error("Sender or receiver email missing.");
+    //         }
+    //       } else {
+    //         console.error("Unexpected data format:", data);
+    //       }
+    //     } catch (error) {
+    //       console.error("Error parsing the data from Thunkable:", error);
+    //     }
+    //   });
+    // };
+
     var me = "";
     var receiverEmail = "";
 
@@ -82,6 +240,7 @@ padding: 0;
               const messageInput = document.querySelector(".message-input");
               const sendButton = document.querySelector(".send-button");
 
+              // Send message function
               const sendMessage = () => {
                 const message = messageInput.value.trim();
                 if (message) {
@@ -90,75 +249,41 @@ padding: 0;
                     .ref(`chats/${me}_${receiverEmail}/Texts`)
                     .push({
                       user: me,
-                      msg: message.replace(/</g, "&lt;"),
+                      msg: message.replace(/</g, "&lt;"), // Escape HTML tags
                     });
                   messageInput.value = "";
                 }
               };
 
+              // Add event listeners for sending message
               messageInput.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") {
                   sendMessage();
                 }
               });
+              sendButton.addEventListener("click", sendMessage);
 
-              sendButton.addEventListener("click", () => {
-                sendMessage();
-              });
-            var id = "";
-          firebase
-            .database()
-            .ref(`chats/${senderEmail}_${receiverEmail}/Texts`)
-            .on("child_added", (s) => {
-              document.querySelector(".loader").style.opacity = "0";
-            // document.querySelector(".loader").style.display = "none";
-              if (s.val().user === me) {
-                if (id !== s.val().user)
-                  document.querySelector(".message-body").innerHTML +=
-                    '<div class="my-name">You</div><div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
-                    s.key +
-                    "')\" id=" +
-                    s.key +
-                    " >" +
-                    s.val().msg +
-                    "</div></div>";
-                else
-                  document.querySelector(".message-body").innerHTML +=
-                    '<div class="message-holder"><div class="my-text" onclick="deleteMsg(\'' +
-                    s.key +
-                    "')\" id=" +
-                    s.key +
-                    ">" +
-                    s.val().msg +
-                    "</div></div>";
-              } else {
-                if (id !== s.val().user)
-                  document.querySelector(".message-body").innerHTML +=
-                    '<div class="their-name">' +
-                    s.val().user +
-                    '</div><div class="message-holder"><div class="their-text" id=' +
-                    s.key +
-                    ">" +
-                    s.val().msg +
-                    "</div></div>";
-                else
-                  document.querySelector(".message-body").innerHTML +=
-                    '<div class="message-holder"><div class="their-text" id=' +
-                    s.key +
-                    ">" +
-                    s.val().msg +
-                    "</div></div>";
-              }
-              document.querySelector(".message-body").scrollBy(0, 1000);
-              id = s.val().user;
+              // Listen for new messages
+              let id = "";
               firebase
                 .database()
-                .ref(`chats/${senderEmail}_${receiverEmail}/Texts/` + s.key)
-                .on("child_changed", (a) => {
-                  document.querySelector("#" + s.key).innerHTML =
-                    "<i>Message Erased</i>";
+                .ref(`chats/${me}_${receiverEmail}/Texts`)
+                .on("child_added", (snapshot) => {
+                  const messageData = snapshot.val();
+                  const messageBody = document.querySelector(".message-body");
+
+                  if (messageData.user === me) {
+                    messageBody.innerHTML += `
+                      <div class="my-text">${messageData.msg}</div>`;
+                  } else {
+                    messageBody.innerHTML += `
+                      <div class="their-text">${messageData.msg}</div>`;
+                  }
+
+                  // Scroll to bottom
+                  messageBody.scrollTop = messageBody.scrollHeight;
                 });
-            });
+
             } else {
               console.error("Sender or receiver email missing.");
             }
